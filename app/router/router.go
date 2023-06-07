@@ -42,6 +42,8 @@ func Routes() *gin.Engine {
 	{
 		authRoute.POST("/login", auth.SignInUser)
 		authRoute.GET("/logout", middleware.DeserializeUser(), auth.LogoutUser)
+		authRoute.POST("/register", auth.SignUpUser)
+		authRoute.GET("/verifyemail/:verificationCode", auth.VerifyEmail)
 	}
 
 	return r

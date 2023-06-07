@@ -3,16 +3,18 @@ package models
 import "time"
 
 type MasterUser struct {
-	ID        uint64    `json:"id" gorm:"primaryKey;auto_increment;not_null"`
-	Username  string    `json:"username" binding:"required" gorm:"uniqueIndex;not null"`
-	Email     string    `json:"email" binding:"required" gorm:"uniqueIndex;not null"`
-	Password  string    `json:"password" binding:"required"`
-	Fullname  string    `json:"fullname" binding:"required"`
-	CreatedBy uint64    `json:"created_by"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedBy uint64    `json:"updated_by"`
-	UpdatedAt time.Time `json:"updated_at"`
-	IsDeleted bool      `json:"is_deleted"`
+	ID               uint64    `json:"id" gorm:"primaryKey;auto_increment;not_null"`
+	Username         string    `json:"username" binding:"required" gorm:"uniqueIndex;not null"`
+	Email            string    `json:"email" binding:"required" gorm:"uniqueIndex;not null"`
+	Password         string    `json:"password" gorm:"not null" binding:"required"`
+	Fullname         string    `json:"fullname" gorm:"not null" binding:"required"`
+	VerificationCode string    `json:"verification_code"`
+	IsVerified       bool      `json:"is_verified"`
+	CreatedBy        uint64    `json:"created_by" `
+	CreatedAt        time.Time `json:"created_at"`
+	UpdatedBy        uint64    `json:"updated_by"`
+	UpdatedAt        time.Time `json:"updated_at"`
+	IsDeleted        bool      `json:"is_deleted"`
 }
 
 type Pagination struct {
@@ -26,11 +28,11 @@ func (MasterUser) TableName() string {
 }
 
 type SignUpInput struct {
-	Name            string `json:"name" binding:"required"`
+	Username        string `json:"username" binding:"required"`
 	Email           string `json:"email" binding:"required"`
 	Password        string `json:"password" binding:"required,min=8"`
 	PasswordConfirm string `json:"passwordConfirm" binding:"required"`
-	Photo           string `json:"photo" binding:"required"`
+	Fullname        string `json:"fullname"  binding:"required"`
 }
 
 type SignInInput struct {
