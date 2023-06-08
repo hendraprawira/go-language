@@ -42,7 +42,7 @@ func ParseTemplateDir(dir string) (*template.Template, error) {
 	return template.ParseFiles(paths...)
 }
 
-func SendEmail(user *models.MasterUser, data *EmailData) {
+func SendEmail(user *models.MasterUser, data *EmailData, emailTemp string) {
 	err := godotenv.Load(".env")
 	if err != nil {
 		fmt.Println(err)
@@ -62,7 +62,7 @@ func SendEmail(user *models.MasterUser, data *EmailData) {
 		log.Fatal("Could not parse template", err)
 	}
 
-	template.ExecuteTemplate(&body, "verificationCode.html", &data)
+	template.ExecuteTemplate(&body, emailTemp, &data)
 
 	m := gomail.NewMessage()
 

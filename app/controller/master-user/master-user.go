@@ -22,7 +22,7 @@ func GetAll(c *gin.Context) {
 	// db.DB.Find(&MasterUser) <- for get All Data
 	db.DB.Where("is_deleted = ?", false).Find(&MasterUser)
 	db.DB.Model(&MasterUser).Where("is_deleted = ?", false).Count(&count)
-	c.JSON(http.StatusOK, gin.H{"Total Data": count, "Data": MasterUser})
+	c.JSON(http.StatusOK, gin.H{"Total Data": count, "data": MasterUser})
 
 }
 
@@ -60,7 +60,7 @@ func GetByID(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"master_user": MasterUser})
+	c.JSON(http.StatusOK, gin.H{"data": MasterUser})
 }
 
 func Create(c *gin.Context) {
@@ -77,15 +77,17 @@ func Create(c *gin.Context) {
 		c.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": err.Error()})
 		return
 	}
-
+	user_id, _ := c.Get("id_user")
 	now := time.Now()
 	newUser := models.MasterUser{
 		Username:  MasterUser.Username,
 		Email:     strings.ToLower(MasterUser.Email),
 		Password:  hashedPassword,
 		Fullname:  MasterUser.Fullname,
+		CreatedBy: user_id.(uint64),
 		CreatedAt: now,
 		UpdatedAt: now,
+		UpdatedBy: user_id.(uint64),
 		IsDeleted: false,
 	}
 
@@ -94,16 +96,19 @@ func Create(c *gin.Context) {
 }
 
 func Update(c *gin.Context) {
-	var MasterUser models.MasterUser
+	var MasterUser models.MasterUserUpdateInput
 	id := c.Param("id")
-
+	user_id, _ := c.Get("id_user")
 	if err := c.ShouldBindJSON(&MasterUser); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	if db.DB.Model(&MasterUser).Where("id = ?", id).Updates(&MasterUser).RowsAffected == 0 {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "tidak dapat mengupdate product"})
+	MasterUser.CreatedBy = user_id.(uint64)
+	MasterUser.UpdatedBy = user_id.(uint64)
+
+	if db.DB.Table("master_user").Where("id = ?", id).Updates(&MasterUser).RowsAffected == 0 {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "tidak dapat mengupdate user"})
 		return
 	}
 
@@ -132,4 +137,9 @@ func Delete(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Data berhasil dihapus"})
+}
+
+func TestAja(c *gin.Context) {
+	user_id, _ := c.Get("id_user")
+	c.JSON(http.StatusOK, gin.H{"message": "Test Aja", "data": user_id})
 }
