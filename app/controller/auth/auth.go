@@ -54,7 +54,7 @@ func SignInUser(c *gin.Context) {
 		return
 	}
 
-	//set cookies max age 60*60(seconds) = 1 hour
+	//set cookies max age 60*60seconds = 1 hour
 	c.SetCookie("token", token, 60*60, "/", "localhost", false, true)
 
 	c.JSON(http.StatusOK, gin.H{"status": "success", "token": token})

@@ -22,7 +22,7 @@ func init() {
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
 	user := os.Getenv("DB_USER")
-	password := os.Getenv("DB_PSWD")
+	password := os.Getenv("DB_PASSWORD")
 	dbname := os.Getenv("DB_NAME")
 	psqlInfo := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, password, host, port, dbname)
 	DB, err := gorm.Open(postgres.Open(psqlInfo), &gorm.Config{})
@@ -35,7 +35,7 @@ func init() {
 }
 
 func main() {
-	// run syntax " go run migrate/migrate.go" for migrate schema to db
+	// run syntax "go run migrate/migrate.go" for migrate schema to db
 	DBs.AutoMigrate(&models.MasterUser{})
 	fmt.Println("? Migration complete")
 }

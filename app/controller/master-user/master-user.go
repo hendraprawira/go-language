@@ -19,7 +19,7 @@ func GetAll(c *gin.Context) {
 	var MasterUser []models.MasterUser
 	var count int64
 
-	// db.DB.Find(&MasterUser)
+	// db.DB.Find(&MasterUser) <- for get All Data
 	db.DB.Where("is_deleted = ?", false).Find(&MasterUser)
 	db.DB.Model(&MasterUser).Where("is_deleted = ?", false).Count(&count)
 	c.JSON(http.StatusOK, gin.H{"Total Data": count, "Data": MasterUser})
