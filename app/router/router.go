@@ -12,13 +12,13 @@ import (
 )
 
 func Routes() *gin.Engine {
-	// gin.SetMode(gin.ReleaseMode) for release mod, uncomment if need it
+	// gin.SetMode(gin.ReleaseMode) // for release mod, uncomment if need it
 	r := gin.Default()
 	db.ConnectDatabase()
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"POST", "OPTIONS", "GET", "PUT", "DELETE"},
+		AllowMethods:     []string{"POST", "OPTIONS", "GET", "PUT", "DELETE", "PATCH"},
 		AllowHeaders:     []string{"Origin", "Authorization", "Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
@@ -37,7 +37,7 @@ func Routes() *gin.Engine {
 		masterUserRoute.POST("/master-user-create", masteruser.Create)
 		masterUserRoute.PUT("/master-user-update/:id", masteruser.Update)
 		masterUserRoute.DELETE("/master-user-delete", masteruser.Delete)
-		masterUserRoute.GET("/test-aja", masteruser.TestAja)
+		masterUserRoute.GET("/test-aja-sih", masteruser.TestAja)
 	}
 
 	authRoute := apiUri.Group("")
